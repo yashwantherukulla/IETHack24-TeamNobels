@@ -1,0 +1,78 @@
+repositories:
+  fiber: https://github.com/TejasGhatte/fiber-base-template.git
+  echo: https://github.com/TejasGhatte/echo-basic-template.git
+  gin: https://github.com/TejasGhatte/gin-basic-template.git
+
+databases:
+  postgres:
+    name: postgres
+    driverPkg: github.com/lib/pq
+  mysql:
+    name: mysql
+    driverPkg: github.com/go-sql-driver/mysql
+  sqlite:
+    name: sqlite3
+    driverPkg: github.com/mattn/go-sqlite3
+
+orms:
+  gorm:
+    name: gorm
+    importPath: gorm.io/gorm
+  sqlx:
+    name: sqlx
+    importPath: github.com/jmoiron/sqlx
+
+combinations:
+  postgres:
+    gorm:
+      dsnTemplate: "host=localhost user=%s password=%s dbname=%s port=5432 sslmode=disable"
+      initFunc: "gorm.Open(postgres.Open(dsn), &gorm.Config{})"
+      additionalImports:
+        - gorm.io/driver/postgres
+    sqlx:
+      dsnTemplate: "user=%s password=%s dbname=%s sslmode=disable"
+      initFunc: "sqlx.Connect(\"mysql\", dsn)"
+  mysql:
+    gorm:
+      dsnTemplate: "%s:%s@tcp(localhost:3306)/%s?parseTime=true"
+      initFunc: "gorm.Open(mysql.Open(dsn), &gorm.Config{})"
+      additionalImports:
+        - gorm.io/driver/mysql
+    sqlx:
+      dsnTemplate: "%s:%s@tcp(localhost:3306)/%s?parseTime=true"
+      initFunc: "sqlx.Connect(\"mysql\", dsn)"
+  sqlite:
+    gorm:
+      dsnTemplate: "%s.db"
+      initFunc: "gorm.Open(sqlite.Open)"
+      additionalImports:
+        - gorm.io/driver/sqlite
+    sqlx:
+      dsnTemplate: "%s.db"
+      initFunc: "sqlx.Connect(\"mysql\", dsn)"
+
+migrationCode:
+  gorm: |
+    err := DB.AutoMigrate(
+    // Add your models here
+    // &models.User{},
+    // &models.Post{},
+    )
+    if err != nil {
+      return fmt.Errorf("failed to run migrations: %w", err)
+    }
+  sqlx: |
+      migrations := []string{
+      // Add your migration SQL here
+      // "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, email TEXT);",
+      // "CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY, title TEXT, content TEXT, user_id INTEGER);",
+      }
+      fmt.Println("Running migrations")
+      for _, migration := range migrations {
+        _, err := DB.Exec(migration)
+        if err != nil {
+          fmt.Errorf("failed to run migrations: %w", err)
+        }
+      }
+  default: |
+    fmt.Println("No specific migration logic for this ORM. Implement custom migration logic here.")

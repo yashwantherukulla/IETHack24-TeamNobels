@@ -1,0 +1,22 @@
+{"scores_summary.json": [
+      {
+        "scores_by_category": {
+          "input_validation": 3,
+          "output_encoding": 3,
+          "authentication": 4,
+          "authorization": 3,
+          "cryptography": 3,
+          "error_handling": 4,
+          "logging": 3,
+          "dependency_management": 4,
+          "secure_configuration": 3,
+          "session_management": 3,
+          "data_protection": 3,
+          "security_testing": 3,
+          "complexity_score": 5,
+          "technical_complexity": 4
+        }
+      }
+    ]
+}
+
